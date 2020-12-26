@@ -2,33 +2,58 @@ package twillight
 
 import (
 	"github.com/GhvstCode/twillight/internal/sms"
+	"github.com/GhvstCode/twillight/internal/utils"
+	"net/http"
 	"net/url"
 	"time"
 )
 
 type SmsClient interface {
-	NewOutgoingMessage(to string, From string, opts SmsOpts) *sms.ResponseSms
-	DeleteMessage(messageSid string) sms.ErrorResponse
-	RetrieveAllMessages() (*sms.ResponseGetAllMessages, sms.ErrorResponse)
+	NewOutgoingMessage(to string, From string, opts ...SmsOptions) *sms.ResponseSms
+	DeleteMessage(messageSid string) ErrorResponse
+	RetrieveAllMessages() (*sms.ResponseGetAllMessages, ErrorResponse)
 }
-type SmsOpts struct {
-	StatusCallback url.URL
-	MediaUrl url.URL
-	provideFeedback bool
-	ValidityPeriod time.Duration
+
+
+
+type SmsOptions func(opts *utils.SmsOpts)
+
+//OptStatusCallback This is the URL Twilio should call using the status_callback_method to send status information to your application. If specified, we POST these message status changes to the URL: queued, failed, sent, delivered, or undelivered
+func OptStatusCallback(url string) SmsOptions{
+	return func (s *utils.SmsOpts){
+		s.StatusCallback = url
+	}
+}
+
+//OptProvideFeedback Whether to confirm delivery of the message. Set this value to true if you are sending messages that have a trackable user action and you intend to confirm delivery of the message using the Message Feedback API. This parameter is false by default.
+func OptProvideFeedback(feedback bool) SmsOptions {
+	return func (s *utils.SmsOpts){
+		s.ProvideFeedback = feedback
+	}
+}
+
+//OptValidityPeriod How long in seconds the message can remain in our outgoing message queue. After this period elapses, the message fails and we call your status callback. Can be between 1 and the default value of 14,400 seconds.
+func OptValidityPeriod(period string) SmsOptions{
+	return func (s *utils.SmsOpts){
+		s.ValidityPeriod= period
+	}
+}
+
+func (c *APIClient) NewOutgoingMessage(to string, From string, opts ...SmsOptions) (*sms.ResponseSms, ErrorResponse){
 
 }
-func (c *APIClient) NewOutgoingMessage(to string, From string, opts SmsOpts) (*sms.ResponseSms, sms.ErrorResponse){
-	_ = c
+
+func (c *APIClient) NewOutgoingMediaMessage(to string, From string, mediaUrl string, opts ...SmsOptions) (*sms.ResponseSms, ErrorResponse){
+
 
 }
 
 //RetrieveAllMessages retrieves all previously sent message
-func (c *APIClient) RetrieveAllMessages() (*sms.ResponseGetAllMessages, sms.ErrorResponse){
+func (c *APIClient) RetrieveAllMessages() (*sms.ResponseGetAllMessages, ErrorResponse){
 
 }
 
-func (c *APIClient) RetrieveAllMessagesMedia() (*sms.ResponseAllMessageMedia, sms.ErrorResponse){
+func (c *APIClient) RetrieveAllMessagesMedia() (*sms.ResponseAllMessageMedia, ErrorResponse){
 
 }
 
@@ -49,6 +74,6 @@ func (c *APIClient) UpdateMessage(messageSid string){
 }
 
 //https://www.twilio.com/docs/sms/api/message-resource#delete-a-message-resource
-func (c *APIClient) DeleteMessage(messageSid string) sms.ErrorResponse{
+func (c *APIClient) DeleteMessage(messageSid string) ErrorResponse{
 
 }
