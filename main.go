@@ -8,13 +8,7 @@ type APIClient struct {
 	Client app.Client
 }
 
-//ErrorResponse is the default error response for twilio API's
-type ErrorResponse struct {
-	Code     int    `json:"code"`
-	Message  string `json:"message"`
-	MoreInfo string `json:"more_info"`
-	Status   int    `json:"status"`
-}
+
 
 
 

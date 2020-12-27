@@ -1,6 +1,7 @@
 package twillight
 
 import (
+	"github.com/GhvstCode/twillight/internal/app"
 	"github.com/GhvstCode/twillight/internal/sms"
 	"github.com/GhvstCode/twillight/internal/utils"
 	"net/http"
@@ -39,21 +40,25 @@ func OptValidityPeriod(period string) SmsOptions{
 	}
 }
 
-func (c *APIClient) NewOutgoingMessage(to string, From string, opts ...SmsOptions) (*sms.ResponseSms, ErrorResponse){
-
+func (c *APIClient) NewOutgoingMessage(to string, from string, body string,  opts ...SmsOptions) (*sms.ResponseSms, app.ErrorResponse){
+	o := &utils.SmsOpts{}
+	for _, opt := range opts {
+		opt(o)
+	}
+	sms.InternalNewOutgoingMessage(c.Client, to, from, body, *o)
 }
 
-func (c *APIClient) NewOutgoingMediaMessage(to string, From string, mediaUrl string, opts ...SmsOptions) (*sms.ResponseSms, ErrorResponse){
+func (c *APIClient) NewOutgoingMediaMessage(to string, From string, mediaUrl string, opts ...SmsOptions) (*sms.ResponseSms, app.ErrorResponse){
 
 
 }
 
 //RetrieveAllMessages retrieves all previously sent message
-func (c *APIClient) RetrieveAllMessages() (*sms.ResponseGetAllMessages, ErrorResponse){
+func (c *APIClient) RetrieveAllMessages() (*sms.ResponseGetAllMessages, app.ErrorResponse){
 
 }
 
-func (c *APIClient) RetrieveAllMessagesMedia() (*sms.ResponseAllMessageMedia, ErrorResponse){
+func (c *APIClient) RetrieveAllMessagesMedia() (*sms.ResponseAllMessageMedia, app.ErrorResponse){
 
 }
 
@@ -74,6 +79,6 @@ func (c *APIClient) UpdateMessage(messageSid string){
 }
 
 //https://www.twilio.com/docs/sms/api/message-resource#delete-a-message-resource
-func (c *APIClient) DeleteMessage(messageSid string) ErrorResponse{
+func (c *APIClient) DeleteMessage(messageSid string) app.ErrorResponse{
 
 }
