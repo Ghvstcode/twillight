@@ -40,12 +40,13 @@ func OptValidityPeriod(period string) SmsOptions{
 	}
 }
 
-func (c *APIClient) NewOutgoingMessage(to string, from string, body string,  opts ...SmsOptions) (*sms.ResponseSms, app.ErrorResponse){
+func (c *APIClient) NewOutgoingMessage(to string, from string, body string,  opts ...SmsOptions) (*sms.ResponseSms, error){
 	o := &utils.SmsOpts{}
 	for _, opt := range opts {
 		opt(o)
 	}
-	sms.InternalNewOutgoingMessage(c.Client, to, from, body, *o)
+	res, err := sms.InternalNewOutgoingMessage(c.Client, to, from, body, *o)
+	return res, err
 }
 
 func (c *APIClient) NewOutgoingMediaMessage(to string, From string, mediaUrl string, opts ...SmsOptions) (*sms.ResponseSms, app.ErrorResponse){

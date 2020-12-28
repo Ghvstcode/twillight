@@ -1,17 +1,16 @@
 package sms
 
 import (
-	"fmt"
+	"encoding/json"
 	"github.com/GhvstCode/twillight/internal/app"
 	"github.com/GhvstCode/twillight/internal/utils"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
 )
 
-func InternalNewOutgoingMessage(APIClient app.Client, to string, from string, msgbody string, opts utils.SmsOpts) (*ResponseSms, app.ErrorResponse){
+func InternalNewOutgoingMessage(APIClient app.Client, to string, from string, msgbody string, opts utils.SmsOpts) (*ResponseSms, error){
 
 		requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages.json"
 		method := "POST"
@@ -33,27 +32,38 @@ func InternalNewOutgoingMessage(APIClient app.Client, to string, from string, ms
 		//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
 
 		client := APIClient.Configuration.HTTPClient
-		req, err := http.NewRequest(method, requestUrl, DataReader)
+		//Errors from the API request usually have a
+		req, _ := http.NewRequest(method, requestUrl, DataReader)
+
 		req.BasicAuth()
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
+
 		req.Header.Add("Authorization", "Basic QUNkNDg1OTk1NWQ5ZmY5ZmI4NmIwYTZkYWFiZDJiZDY5OTpmN2M5YTE3ZjQ3Mjk3OWQyODQxYzBkN2E1ZTc0OTVjNg==")
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 		res, err := client.Do(req)
+
 		if err != nil {
-			fmt.Println(err)
-			return
+			return nil, &app.ErrorResponse{Code: 0, Message: err.Error()}
 		}
+
 		defer res.Body.Close()
 
-		body, err := ioutil.ReadAll(res.Body)
+	var e app.ErrorResponse
+		var r ResponseSms
+	if res.StatusCode  != http.StatusOK {
+		err := json.NewDecoder(res.Body).Decode(&e)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return nil, &app.ErrorResponse{Code: 0, Message: err.Error()}
 		}
-		//fmt.Println(string(body))
+		return nil, &e
+
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&r)
+	if err != nil {
+		return nil, &app.ErrorResponse{Code: 0, Message: err.Error()}
+	}
+
+return &r, nil
 }
 //Type A! which should not be imported.
