@@ -4,9 +4,6 @@ import (
 	"github.com/GhvstCode/twillight/internal/app"
 	"github.com/GhvstCode/twillight/internal/sms"
 	"github.com/GhvstCode/twillight/internal/utils"
-	"net/http"
-	"net/url"
-	"time"
 )
 
 type SmsClient interface {
@@ -64,11 +61,14 @@ func (c *APIClient) NewOutgoingMediaMessage(to string, from string, msgbody stri
 
 //RetrieveAllMessages retrieves all previously sent message
 func (c *APIClient) RetrieveAllMessages() (*sms.ResponseGetAllMessages, error){
-
+	res, err := sms.InternalRetrieveAllMessages(c.Client)
+	return res, err
 }
 
-func (c *APIClient) RetrieveAllMessagesMedia() (*sms.ResponseAllMessageMedia, app.ErrorResponse){
-
+//RetrieveAllMessagesMedia Lists all media associated with the Account.
+func (c *APIClient) RetrieveAllMessagesMedia(messageSid string) (*sms.ResponseAllMessageMedia, error){
+	res, err := sms.InternalRetrieveAllMessagesMedia(c.Client, messageSid)
+	return res, err
 }
 
 //RetrieveAllMessages retrieves a previously sent message

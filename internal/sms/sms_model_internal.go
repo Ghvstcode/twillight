@@ -50,11 +50,19 @@ type ResponseSendMessageFeedback struct {
 }
 
 
-
+type MediaList struct {
+	Sid         string `json:"sid"`
+	AccountSid  string `json:"account_sid"`
+	ParentSid   string `json:"parent_sid"`
+	ContentType string `json:"content_type"`
+	DateCreated string `json:"date_created"`
+	DateUpdated string `json:"date_updated"`
+	URI         string `json:"uri"`
+}
 type ResponseAllMessageMedia struct {
 	FirstPageURI    string        `json:"first_page_uri"`
 	End             int           `json:"end"`
-	MediaList       []interface{} `json:"media_list"`
+	MediaList       []MediaList `json:"media_list"`
 	PreviousPageURI interface{}   `json:"previous_page_uri"`
 	URI             string        `json:"uri"`
 	PageSize        int           `json:"page_size"`
