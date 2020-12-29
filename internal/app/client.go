@@ -33,7 +33,8 @@ func (e *ErrorResponse) Error() string{
 //basicAuth generates the Basic Auth that is used for interacting with the twillo API
 func basicAuth(username, password string) string {
 	auth := username + ":" + password
-	return base64.StdEncoding.EncodeToString([]byte(auth))
+	a := base64.StdEncoding.EncodeToString([]byte(auth))
+	return "Basic" + a
 }
 
 func NewDefaultClient(username, password string) Client{

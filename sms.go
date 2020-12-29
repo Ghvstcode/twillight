@@ -10,7 +10,9 @@ import (
 )
 
 type SmsClient interface {
-	NewOutgoingMessage(to string, From string, opts ...SmsOptions) *sms.ResponseSms
+	NewOutgoingMessage(to string, from string, body string,  opts ...SmsOptions) (*sms.ResponseSms, error)
+	NewOutgoingMediaMessage(to string, from string, msgbody string, mediaUrl string, opts ...SmsOptions) (*sms.ResponseSms, error)
+	//NewOutgoingMessage(to string, From string, opts ...SmsOptions) *sms.ResponseSms
 	DeleteMessage(messageSid string) ErrorResponse
 	RetrieveAllMessages() (*sms.ResponseGetAllMessages, ErrorResponse)
 }
@@ -40,6 +42,7 @@ func OptValidityPeriod(period string) SmsOptions{
 	}
 }
 
+//NewOutgoingMessage sends a new SMS message to the numbers provided.
 func (c *APIClient) NewOutgoingMessage(to string, from string, body string,  opts ...SmsOptions) (*sms.ResponseSms, error){
 	o := &utils.SmsOpts{}
 	for _, opt := range opts {
@@ -49,13 +52,18 @@ func (c *APIClient) NewOutgoingMessage(to string, from string, body string,  opt
 	return res, err
 }
 
-func (c *APIClient) NewOutgoingMediaMessage(to string, From string, mediaUrl string, opts ...SmsOptions) (*sms.ResponseSms, app.ErrorResponse){
-
-
+//NewOutgoingMediaMessage sends a new MMS
+func (c *APIClient) NewOutgoingMediaMessage(to string, from string, msgbody string, mediaUrl string, opts ...SmsOptions) (*sms.ResponseSms, error){
+	o := &utils.SmsOpts{}
+	for _, opt := range opts {
+		opt(o)
+	}
+	res, err := sms.InternalNewOutgoingMediaMessage(c.Client, to, from, msgbody, mediaUrl, *o)
+	return res, err
 }
 
 //RetrieveAllMessages retrieves all previously sent message
-func (c *APIClient) RetrieveAllMessages() (*sms.ResponseGetAllMessages, app.ErrorResponse){
+func (c *APIClient) RetrieveAllMessages() (*sms.ResponseGetAllMessages, error){
 
 }
 
