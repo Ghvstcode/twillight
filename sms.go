@@ -49,6 +49,17 @@ func (c *APIClient) NewOutgoingMessage(to string, from string, body string,  opt
 	return res, err
 }
 
+//NewOutgoingWhatsappMessage sends a new whatsapp message to a registered whatsapp Number. WhatsApp requires that your application implement explicit user opt-ins to deliver messages over WhatsApp.
+//https://www.twilio.com/docs/whatsapp/api?code-sample=code-send-a-whatsapp-message-and-specify-a-statuscallback-url&code-language=Node.js&code-sdk-version=3.x#using-twilio-phone-numbers-with-whatsapp
+func (c *APIClient) NewOutgoingWhatsappMessage(to string, from string, body string,  opts ...SmsOptions) (*sms.ResponseSms, error){
+	o := &utils.SmsOpts{}
+	for _, opt := range opts {
+		opt(o)
+	}
+	res, err := sms.InternalNewOutgoingWhatsappMessage(c.Client, to, from, body, *o)
+	return res, err
+}
+
 //NewOutgoingMediaMessage sends a new MMS
 func (c *APIClient) NewOutgoingMediaMessage(to string, from string, msgbody string, mediaUrl string, opts ...SmsOptions) (*sms.ResponseSms, error){
 	o := &utils.SmsOpts{}
@@ -72,22 +83,36 @@ func (c *APIClient) RetrieveAllMessagesMedia(messageSid string) (*sms.ResponseAl
 }
 
 //RetrieveAllMessages retrieves a previously sent message
-func (c *APIClient) RetrieveMessage(messageSid string){
-
+func (c *APIClient) RetrieveMessage(messageSid string)(*sms.ResponseSms,error){
+	res, err := sms.InternalRetrieveAMessage(c.Client, messageSid)
+	return res, err
 }
 
 //https://www.twilio.com/console/sms/insights/delivery?q=(activeInsightsView:overview,filters:!((field:feedback_outcome,filter_type:EQUALS,values:!(UNCONFIRMED))))
 //Message Feedback represents the user-reported outcome of a message. For Message Feedback to be sent, the provide feedback option should be set to true when the message is being sent.
-func (c *APIClient) SendMessageFeedback(messageSid string){
-
+func (c *APIClient) SendMessageFeedback(messageSid, outcome string)(*sms.ResponseSendMessageFeedback, error){
+	res, err := sms.InternalSendMessageFeedback(c.Client, messageSid, outcome)
+	return res, err
 }
 
+//UpdateMessage Updates the body of a Message resource. To redact a message, set the body property to an empty string
 //https://www.twilio.com/docs/sms/api/message-resource#update-a-message-resource
-func (c *APIClient) UpdateMessage(messageSid string){
-
+func (c *APIClient) UpdateMessage(messageSid, body string)(*sms.ResponseSms, error){
+	res, err := sms.InternalUpdateMessage(c.Client, messageSid, body)
+	return res, err
 }
 
-//https://www.twilio.com/docs/sms/api/message-resource#delete-a-message-resource
-func (c *APIClient) DeleteMessage(messageSid string) app.ErrorResponse{
 
+//DeleteMessage deletes a Message record from your account. Once the record is deleted, it will no longer appear in the API and Account Portal logs! On successful deletion, It returns the deleted message.
+//https://www.twilio.com/docs/sms/api/message-resource#delete-a-message-resource
+func (c *APIClient) DeleteMessage(messageSid string) (*sms.ResponseSms, error){
+	res, err := sms.InternalDeleteMessage(c.Client, messageSid)
+	return res, err
+}
+
+//DeleteMessageMedia deletes the specified media record from your account. Once the record is deleted, it will no longer appear in the API and Account Portal logs! On successful deletion, It returns the deleted message.
+//https://www.twilio.com/docs/sms/api/message-resource#message-media-subresources
+func (c *APIClient) DeleteMessageMedia(messageSid string) (*sms.ResponseSms, error){
+	res, err := sms.InternalDeleteMessage(c.Client, messageSid)
+	return res, err
 }
