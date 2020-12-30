@@ -449,4 +449,42 @@ func InternalDeleteMessage(APIClient app.Client, MessageSid string) (*ResponseSm
 	return &r, nil
 }
 
+func InternalDeleteMessageMedia(APIClient app.Client, MessageSid string, MediaSid string) error {
+
+	requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages/"+ MessageSid +"/Media" + MediaSid + ".json"
+	method := "DELETE"
+
+
+	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
+
+
+	client := APIClient.Configuration.HTTPClient
+	//Errors from the API request usually have a
+	req, _ := http.NewRequest(method, requestUrl, nil)
+
+	req.BasicAuth()
+
+	req.Header.Add("Authorization", APIClient.BasicAuth)
+	res, err := client.Do(req)
+
+	if err != nil {
+		return  &app.ErrorResponse{Code: 0, Message: err.Error()}
+	}
+
+	defer res.Body.Close()
+
+	var e app.ErrorResponse
+	if res.StatusCode  != http.StatusNoContent{
+		err := json.NewDecoder(res.Body).Decode(&e)
+		if err != nil {
+			return &app.ErrorResponse{Code: 0, Message: err.Error()}
+		}
+		return &e
+
+	}
+
+
+	return nil
+}
+
 //Type A! which should not be imported.

@@ -21,12 +21,12 @@ type Client struct {
 
 //ErrorResponse is the default error response for twilio API's
 type ErrorResponse struct {
-
 	Code     int    `json:"code"`
 	Message  string `json:"message"`
 	MoreInfo string `json:"more_info"`
 	Status   int    `json:"status"`
 }
+//Implements Golang's error interface.
 func (e *ErrorResponse) Error() string{
 	return e.Message
 }
@@ -37,6 +37,7 @@ func basicAuth(username, password string) string {
 	return "Basic" + a
 }
 
+//NewDefaultClient Creates a new default client -- An Internal function.
 func NewDefaultClient(username, password string) Client{
 	b := basicAuth(username, password)
 	c := Client{

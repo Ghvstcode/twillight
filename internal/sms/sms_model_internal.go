@@ -49,7 +49,7 @@ type ResponseSendMessageFeedback struct {
 	URI         string `json:"uri"`
 }
 
-
+//MediaList is a representation of a Media response.
 type MediaList struct {
 	Sid         string `json:"sid"`
 	AccountSid  string `json:"account_sid"`
@@ -59,6 +59,7 @@ type MediaList struct {
 	DateUpdated string `json:"date_updated"`
 	URI         string `json:"uri"`
 }
+
 type ResponseAllMessageMedia struct {
 	FirstPageURI    string        `json:"first_page_uri"`
 	End             int           `json:"end"`

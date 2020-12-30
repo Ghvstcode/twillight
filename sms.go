@@ -1,7 +1,6 @@
 package twillight
 
 import (
-	"github.com/GhvstCode/twillight/internal/app"
 	"github.com/GhvstCode/twillight/internal/sms"
 	"github.com/GhvstCode/twillight/internal/utils"
 )
@@ -9,9 +8,14 @@ import (
 type SmsClient interface {
 	NewOutgoingMessage(to string, from string, body string,  opts ...SmsOptions) (*sms.ResponseSms, error)
 	NewOutgoingMediaMessage(to string, from string, msgbody string, mediaUrl string, opts ...SmsOptions) (*sms.ResponseSms, error)
-	//NewOutgoingMessage(to string, From string, opts ...SmsOptions) *sms.ResponseSms
-	DeleteMessage(messageSid string) ErrorResponse
-	RetrieveAllMessages() (*sms.ResponseGetAllMessages, ErrorResponse)
+	NewOutgoingWhatsappMessage(to string, from string, body string,  opts ...SmsOptions) (*sms.ResponseSms, error)
+	RetrieveAllMessages() (*sms.ResponseGetAllMessages, error)
+	RetrieveAllMessagesMedia(messageSid string) (*sms.ResponseAllMessageMedia, error)
+	RetrieveMessage(messageSid string)(*sms.ResponseSms,error)
+	SendMessageFeedback(messageSid, outcome string)(*sms.ResponseSendMessageFeedback, error)
+	DeleteMessage(messageSid string) (*sms.ResponseSms, error)
+	UpdateMessage(messageSid, body string)(*sms.ResponseSms, error)
+	DeleteMessageMedia(messageSid, mediaSid string) error
 }
 
 
@@ -112,7 +116,7 @@ func (c *APIClient) DeleteMessage(messageSid string) (*sms.ResponseSms, error){
 
 //DeleteMessageMedia deletes the specified media record from your account. Once the record is deleted, it will no longer appear in the API and Account Portal logs! On successful deletion, It returns the deleted message.
 //https://www.twilio.com/docs/sms/api/message-resource#message-media-subresources
-func (c *APIClient) DeleteMessageMedia(messageSid string) (*sms.ResponseSms, error){
-	res, err := sms.InternalDeleteMessage(c.Client, messageSid)
-	return res, err
+func (c *APIClient) DeleteMessageMedia(messageSid, mediaSid string) error{
+	err := sms.InternalDeleteMessageMedia(c.Client, messageSid, mediaSid)
+	return err
 }
