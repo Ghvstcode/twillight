@@ -4,6 +4,7 @@ import (
 	"github.com/GhvstCode/twillight/internal/utils"
 	"github.com/GhvstCode/twillight/internal/verify"
 )
+
 type VerOptions func(opts *utils.VerOpts)
 
 //OptCodeLength -- Specify the length of the verification code.
@@ -48,6 +49,26 @@ func (c *APIClient) NewVerificationService(FriendlyName string, opts ...VerOptio
 		opt(o)
 	}
 	res, err := verify.InternalNewVerificationService(c.Client, FriendlyName, *o)
+	return res, err
+}
+
+func (c *APIClient) UpdateCodeLength(serviceSid, codeLength string)(*verify.ResponseVerifyService,error) {
+	res, err := verify.InternalUpdateCodeLength(c.Client, serviceSid,codeLength)
+	return res, err
+}
+
+func (c *APIClient) UpdateFriendlyName(serviceSid, friendlyName string)(*verify.ResponseVerifyService,error) {
+	res, err := verify.InternalUpdateFriendlyName(c.Client, serviceSid,friendlyName)
+	return res, err
+}
+
+func (c *APIClient) DeleteService(serviceSid string) error {
+	err := verify.InternalDeleteService(c.Client, serviceSid)
+	return err
+}
+
+func (c *APIClient) FetchService(serviceSid string)(*verify.ResponseVerifyService,error){
+	res, err := verify.InternalFetchService(c.Client, serviceSid)
 	return res, err
 }
 
