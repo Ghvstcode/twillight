@@ -33,3 +33,48 @@ type ResponseVerifyService struct {
 		AccessTokens            string `json:"access_tokens"`
 	} `json:"links"`
 }
+//ResponseSendToken is returned when a verification token is sent too a user.
+type ResponseSendToken struct {
+	Sid         string    `json:"sid"`
+	ServiceSid  string    `json:"service_sid"`
+	AccountSid  string    `json:"account_sid"`
+	To          string    `json:"to"`
+	Channel     string    `json:"channel"`
+	Status      string    `json:"status"`
+	Valid       bool      `json:"valid"`
+	DateCreated time.Time `json:"date_created"`
+	DateUpdated time.Time `json:"date_updated"`
+	Lookup      struct {
+		Carrier struct {
+			ErrorCode         interface{} `json:"error_code"`
+			Name              string      `json:"name"`
+			MobileCountryCode string      `json:"mobile_country_code"`
+			MobileNetworkCode string      `json:"mobile_network_code"`
+			Type              string      `json:"type"`
+		} `json:"carrier"`
+	} `json:"lookup"`
+	Amount           string `json:"amount"`
+	Payee            string `json:"payee"`
+	SendCodeAttempts []struct {
+		Time      time.Time   `json:"time"`
+		Channel   string      `json:"channel"`
+		ChannelID interface{} `json:"channel_id"`
+	} `json:"send_code_attempts"`
+	URL string `json:"url"`
+}
+
+//ResponseConfirmVerification is returned when a verification token is confirmed Successfully.
+type ResponseConfirmVerification struct {
+	Sid         string      `json:"sid"`
+	ServiceSid  string      `json:"service_sid"`
+	AccountSid  string      `json:"account_sid"`
+	To          string      `json:"to"`
+	Channel     string      `json:"channel"`
+	Status      string      `json:"status"`
+	Valid       bool        `json:"valid"`
+	Amount      interface{} `json:"amount"`
+	Payee       interface{} `json:"payee"`
+	DateCreated time.Time   `json:"date_created"`
+	DateUpdated time.Time   `json:"date_updated"`
+}
+

@@ -41,12 +41,27 @@ func OptEnableCustomCode(enableCustomCode bool) VerOptions{
 		s.CustomCodeEnabled = enableCustomCode
 	}
 }
-
+//NewVerificationService A Verification Service is the set of common configurations used to create and check verifications. One verification service can be used to send multiple verification tokens.
 func (c *APIClient) NewVerificationService(FriendlyName string, opts ...VerOptions) (*verify.ResponseVerifyService, error) {
 	o := &utils.VerOpts{}
 	for _, opt := range opts {
 		opt(o)
 	}
 	res, err := verify.InternalNewVerificationService(c.Client, FriendlyName, *o)
+	return res, err
+}
+
+//func (c *APIClient) SendVerificationToken(serviceSid, to, channel string)(*verify.ResponseSendToken,error) {
+//
+//}
+
+//StartPsd2Verification is to verify a transaction. You will start by requesting to send a verification code to the user.
+func (c *APIClient) StartPsd2Verification(serviceSid,to, channel,amount, payee string)(*verify.ResponseSendToken,error) {
+	res, err := verify.InternalStartPsd2Verification(c.Client, serviceSid, to, channel, amount, payee)
+	return res, err
+}
+
+func (c *APIClient) CompletePsd2Verification(serviceSid,to, code,amount, payee string)(*verify.ResponseConfirmVerification,error) {
+	res, err := verify.InternalCompletePsd2Verification(c.Client, serviceSid, to, code, amount, payee)
 	return res, err
 }
