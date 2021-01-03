@@ -42,6 +42,7 @@ func OptEnableCustomCode(enableCustomCode bool) VerOptions{
 		s.CustomCodeEnabled = enableCustomCode
 	}
 }
+
 //NewVerificationService A Verification Service is the set of common configurations used to create and check verifications. One verification service can be used to send multiple verification tokens.
 func (c *APIClient) NewVerificationService(FriendlyName string, opts ...VerOptions) (*verify.ResponseVerifyService, error) {
 	o := &utils.VerOpts{}
@@ -77,8 +78,19 @@ func (c *APIClient) SendVerificationToken(serviceSid, to, channel string)(*verif
 	return res, err
 }
 
-func (c *APIClient) CompleteVerification(serviceSid, to, channel string)(*verify.ResponseConfirmVerification,error) {
-	res, err := verify.InternalCompleteVerification(c.Client, serviceSid, to, channel)
+//func (c *APIClient) CompleteVerification(service verify.InternalVerification, to, channel string)(*verify.ResponseConfirmVerification,error) {
+//	//res, err := verify.InternalCompleteVerification(c.Client, serviceSid, to, channel)
+//	//return res, err
+//
+//	res, err := service.InternalCompleteVerification(, to, channel)
+//	return res, err
+//}
+
+func CompleteVerification(service verify.InternalVerification, to, channel string)(*verify.ResponseConfirmVerification,error) {
+	//res, err := verify.InternalCompleteVerification(c.Client, serviceSid, to, channel)
+	//return res, err
+
+	res, err := service.InternalCompleteVerification(to, channel)
 	return res, err
 }
 

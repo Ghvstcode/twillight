@@ -1,8 +1,9 @@
-package verify
+package verify_test
 
 import (
 	"github.com/GhvstCode/twillight/internal/app"
 	"github.com/GhvstCode/twillight/internal/utils"
+	"github.com/GhvstCode/twillight/internal/verify"
 	"reflect"
 	"testing"
 )
@@ -16,14 +17,14 @@ func TestInternalNewVerificationService(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *ResponseVerifyService
+		want    *verify.ResponseVerifyService
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := InternalNewVerificationService(tt.args.APIClient, tt.args.friendlyName, tt.args.opts)
+			got, err := verify.InternalNewVerificationService(tt.args.APIClient, tt.args.friendlyName, tt.args.opts)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("InternalNewVerificationService() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -47,14 +48,14 @@ func TestInternalStartPsd2Verification(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *ResponseSendToken
+		want    *verify.ResponseSendToken
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := InternalStartPsd2Verification(tt.args.APIClient, tt.args.serviceSid, tt.args.to, tt.args.channel, tt.args.amount, tt.args.payee)
+			got, err := verify.InternalStartPsd2Verification(tt.args.APIClient, tt.args.serviceSid, tt.args.to, tt.args.channel, tt.args.amount, tt.args.payee)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("InternalStartPsd2Verification() error = %v, wantErr %v", err, tt.wantErr)
 				return

@@ -69,6 +69,7 @@ func (c *APIClient) NewOutgoingMediaMessage(to string, from string, msgbody stri
 		opt(o)
 	}
 	res, err := sms.InternalNewOutgoingMediaMessage(c.Client, to, from, msgbody, mediaUrl, *o)
+
 	return res, err
 }
 

@@ -50,10 +50,11 @@ func InternalNewOutgoingMessage(APIClient app.Client, to string, from string, ms
 
 	var e app.ErrorResponse
 		var r ResponseSms
-	if res.StatusCode  != http.StatusOK {
+	if res.StatusCode  != http.StatusCreated {
 		err := json.NewDecoder(res.Body).Decode(&e)
 		if err != nil {
-			return nil, &app.ErrorResponse{Code: 0, Message: err.Error()}
+			//fmt.Print("INTERNAL_SMS_MARSHALL_ERR", res.StatusCode)
+			return nil, &app.ErrorResponse{Code: 0, MoreInfo: err.Error()}
 		}
 		return nil, &e
 
