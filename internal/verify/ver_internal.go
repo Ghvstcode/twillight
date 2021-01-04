@@ -2,7 +2,6 @@ package verify
 
 import (
 	"encoding/json"
-	"github.com/GhvstCode/twillight"
 	"github.com/GhvstCode/twillight/internal/app"
 	"github.com/GhvstCode/twillight/internal/utils"
 	"net/http"
@@ -21,7 +20,7 @@ type InternalVerification interface {
 }
 
 type ResponseVerifyService struct {
-	twillight.APIClient
+	app.Client
 	Sid                      string `json:"sid"`
 	AccountSid               string `json:"account_sid"`
 	FriendlyName             string `json:"friendly_name"`
