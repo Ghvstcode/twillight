@@ -94,6 +94,12 @@ func CompleteVerification(service verify.InternalVerification, to, channel strin
 	return res, err
 }
 
+////StartPsd2Verification is to verify a transaction. You will start by requesting to send a verification code to the user.
+//func (c *APIClient) StartPsd2Verification(serviceSid,to, channel,amount, payee string)(*verify.ResponseSendToken,error) {
+//	res, err := verify.InternalStartPsd2Verification(c.Client, serviceSid, to, channel, amount, payee)
+//	return res, err
+//}
+
 //StartPsd2Verification is to verify a transaction. You will start by requesting to send a verification code to the user.
 func (c *APIClient) StartPsd2Verification(serviceSid,to, channel,amount, payee string)(*verify.ResponseSendToken,error) {
 	res, err := verify.InternalStartPsd2Verification(c.Client, serviceSid, to, channel, amount, payee)
