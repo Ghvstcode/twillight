@@ -17,6 +17,7 @@ const (
 
 type InternalVerification interface {
 	InternalCompleteVerification(to, code string)(*ResponseConfirmVerification, error)
+	InternalStartVerification(APIClient app.Client, serviceSid, to, channel string)(*ResponseSendToken, error)
 }
 
 type ResponseVerifyService struct {
@@ -146,7 +147,6 @@ func (s *ResponseVerifyService) InternalCompleteVerification(to, code string)(*R
 			return nil, &app.ErrorResponse{Code: 0, Message: err.Error()}
 		}
 		return nil, &e
-
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&r)
@@ -157,9 +157,9 @@ func (s *ResponseVerifyService) InternalCompleteVerification(to, code string)(*R
 	return &r, nil
 }
 
-func InternalStartVerification(APIClient app.Client, serviceSid, to, channel string)(*ResponseSendToken, error){
+func (s *ResponseVerifyService) InternalStartVerification(serviceSid, to, channel string)(*ResponseSendToken, error){
 
-	requestUrl := baseUrl + "/Services" + serviceSid + "/Verifications"
+	requestUrl := baseUrl + "/Services" + s.Sid + "/Verifications"
 	method := "POST"
 
 	Data := url.Values{}
@@ -167,13 +167,13 @@ func InternalStartVerification(APIClient app.Client, serviceSid, to, channel str
 	Data.Set("Channel",channel)
 	DataReader := strings.NewReader(Data.Encode())
 
-	client := APIClient.Configuration.HTTPClient
+	client := s.Client.Configuration.HTTPClient
 
 	req, _ := http.NewRequest(method, requestUrl, DataReader)
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", APIClient.BasicAuth)
+	req.Header.Add("Authorization", s.Client.BasicAuth)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	res, err := client.Do(req)

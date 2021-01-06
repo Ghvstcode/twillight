@@ -73,23 +73,12 @@ func (c *APIClient) FetchService(serviceSid string)(*verify.ResponseVerifyServic
 	return res, err
 }
 
-func (c *APIClient) SendVerificationToken(serviceSid, to, channel string)(*verify.ResponseSendToken,error) {
-	res, err := verify.InternalStartVerification(c.Client, serviceSid, to, channel)
-	return res, err
-}
-
-//func (c *APIClient) CompleteVerification(service verify.InternalVerification, to, channel string)(*verify.ResponseConfirmVerification,error) {
-//	//res, err := verify.InternalCompleteVerification(c.Client, serviceSid, to, channel)
-//	//return res, err
-//
-//	res, err := service.InternalCompleteVerification(, to, channel)
+//func SendVerificationToken(serviceSid, to, channel string)(*verify.ResponseSendToken,error) {
+//	res, err := verify.InternalStartVerification(c.Client, serviceSid, to, channel)
 //	return res, err
 //}
 
 func CompleteVerification(service verify.InternalVerification, to, channel string)(*verify.ResponseConfirmVerification,error) {
-	//res, err := verify.InternalCompleteVerification(c.Client, serviceSid, to, channel)
-	//return res, err
-
 	res, err := service.InternalCompleteVerification(to, channel)
 	return res, err
 }

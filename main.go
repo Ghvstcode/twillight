@@ -9,6 +9,7 @@ type APIClient struct {
 }
 
 
+
 //NewClient creates an authenticated client that can be used to interact with API's
 func NewClient(accountSid, authToken string) *APIClient {
 	client := app.NewDefaultClient(accountSid, authToken)

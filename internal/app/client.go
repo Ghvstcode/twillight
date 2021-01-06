@@ -31,6 +31,10 @@ func (e *ErrorResponse) Error() string{
 	return e.Message
 }
 
+func (e *ErrorResponse) ErrorCode() int{
+	return e.Code
+}
+
 //basicAuth generates the Basic Auth that is used for interacting with the twillo API
 func basicAuth(username, password string) string {
 	auth := username + ":" + password
