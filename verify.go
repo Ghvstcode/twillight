@@ -73,25 +73,20 @@ func (c *APIClient) FetchService(serviceSid string)(*verify.ResponseVerifyServic
 	return res, err
 }
 
-//func SendVerificationToken(serviceSid, to, channel string)(*verify.ResponseSendToken,error) {
-//	res, err := verify.InternalStartVerification(c.Client, serviceSid, to, channel)
-//	return res, err
-//}
 
-func CompleteVerification(service verify.InternalVerification, to, channel string)(*verify.ResponseConfirmVerification,error) {
-	res, err := service.InternalCompleteVerification(to, channel)
+func StartVerification(service verify.InternalVerification, to, channel string)(*verify.ResponseSendToken,error) {
+	res, err := service.InternalStartVerification(to, channel)
 	return res, err
 }
 
-////StartPsd2Verification is to verify a transaction. You will start by requesting to send a verification code to the user.
-//func (c *APIClient) StartPsd2Verification(serviceSid,to, channel,amount, payee string)(*verify.ResponseSendToken,error) {
-//	res, err := verify.InternalStartPsd2Verification(c.Client, serviceSid, to, channel, amount, payee)
-//	return res, err
-//}
+func CompleteVerification(service verify.InternalVerification, to, code string)(*verify.ResponseConfirmVerification,error) {
+	res, err := service.InternalCompleteVerification(to, code)
+	return res, err
+}
 
 //StartPsd2Verification is to verify a transaction. You will start by requesting to send a verification code to the user.
-func (c *APIClient) StartPsd2Verification(serviceSid,to, channel,amount, payee string)(*verify.ResponseSendToken,error) {
-	res, err := verify.InternalStartPsd2Verification(c.Client, serviceSid, to, channel, amount, payee)
+func StartPsd2Verification(service verify.InternalVerification,to, channel,amount, payee string)(*verify.ResponseSendToken,error) {
+	res, err := service.InternalStartPsd2Verification(to, channel, amount, payee)
 	return res, err
 }
 
