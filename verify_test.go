@@ -49,27 +49,35 @@ func (m *MockVerifyService) InternalStartVerification(to, channel string)(*verif
 	if len(channel) < 3{
 		return nil, errors.New("invalid Channel")
 	}
-	if channel != "call"{
-		return nil, errors.New("invalid Channel")
-	} else if channel != "email"{
-		return nil, errors.New("invalid Channel")
-	}
+
 
 	return &verify.ResponseSendToken{
 		Sid: m.Sid,
 		To: to,
 		Valid: true,
-		Channel: m.VerifyChannel,
+		Channel: channel,
 	}, nil
 }
 
 func (m *MockVerifyService)InternalStartPsd2Verification(to, channel, amount, payee string)(*verify.ResponseSendToken, error){
 	if m.Err != nil {
-		return nil, m.Err
+		return nil, errors.New("an Error Occurred, Unable to start verification")
 	}
 
 	if to == "" {
-		return nil, m.Err
+		return nil, errors.New("invalid TO number")
+	}
+
+	if amount == "" {
+		return nil, errors.New("invalid Amount")
+	}
+
+	if payee == "" {
+		return nil, errors.New("invalid Payee")
+	}
+
+	if len(channel) < 3{
+		return nil, errors.New("invalid Channel")
 	}
 
 	return &verify.ResponseSendToken{
@@ -78,6 +86,7 @@ func (m *MockVerifyService)InternalStartPsd2Verification(to, channel, amount, pa
 		Valid: true,
 	}, nil
 }
+
 
 
 func TestCompleteVerification(t *testing.T) {
@@ -132,7 +141,7 @@ func TestStartVerification(t *testing.T) {
 	cases := [] struct{
 		m MockVerifyService
 		to string
-		code string
+		channel string
 		ExpectedSid string
 		ExpectedErr error
 		ExpectedValid bool
@@ -140,13 +149,12 @@ func TestStartVerification(t *testing.T) {
 	}{
 		{
 			m: MockVerifyService{
-				VerifyChannel: "email",
 				Err: nil,
 				CodeLength: 4,
 				Sid: "VA12345",
 			},
 			to: "987654321",
-			code: "9876",
+			channel: "email",
 			ExpectedSid: "VA12345",
 			ExpectedErr: nil,
 			ExpectedValid: true,
@@ -156,7 +164,7 @@ func TestStartVerification(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		res, err := twillight.StartVerification(&c.m, c.to, c.code)
+		res, err := twillight.StartVerification(&c.m, c.to, c.channel)
 		if !reflect.DeepEqual(err, c.ExpectedErr) {
 			t.Fatalf("Expected err to be %q but it was %q", c.ExpectedErr, err)
 		}
@@ -174,4 +182,56 @@ func TestStartVerification(t *testing.T) {
 		}
 	}
 
+}
+
+func TestStartPsd2Verification(t *testing.T) {
+	cases := [] struct{
+		m MockVerifyService
+		to string
+		channel string
+		amount string
+		payee string
+		ExpectedSid string
+		ExpectedErr error
+		ExpectedValid bool
+		ExpectedURL string
+	}{
+		{
+			m: MockVerifyService{
+				Err: nil,
+				CodeLength: 4,
+				Sid: "VA12345",
+			},
+			to: "987654321",
+			channel: "email",
+			amount: "",
+			payee: "",
+			ExpectedSid: "VA12345",
+			ExpectedErr: errors.New("invalid Amount"),
+		},
+	}
+
+	for _, c := range cases {
+		res, err := twillight.StartPsd2Verification(&c.m, c.to, c.channel, c.amount, c.payee)
+		if !reflect.DeepEqual(err, c.ExpectedErr) {
+			t.Fatalf("Expected err to be %q but it was %q", c.ExpectedErr, err)
+		}
+
+		if res != nil{
+			//t.Skip("Skipped the rest of the tests")
+			if c.ExpectedSid != res.Sid {
+				t.Fatalf("Expected SID to be %s but got %s", c.ExpectedSid, res.Sid)
+			}
+
+			if c.ExpectedValid != res.Valid {
+				t.Fatalf("Expected Valid field to be %t but got %t", c.ExpectedValid, res.Valid)
+			}
+
+			if c.ExpectedURL != "https://verify.twilio.com/v2/Services/" + res.Sid {
+				t.Fatalf("Expected Valid field to be %s but got %s", c.ExpectedURL, res.Channel)
+			}
+		}
+
+
+	}
 }
