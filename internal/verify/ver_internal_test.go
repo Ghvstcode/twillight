@@ -10,7 +10,7 @@ import (
 
 func TestInternalNewVerificationService(t *testing.T) {
 	type args struct {
-		APIClient    app.Client
+		APIClient    app.InternalAuth
 		friendlyName string
 		opts         utils.VerOpts
 	}

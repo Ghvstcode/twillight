@@ -10,8 +10,8 @@ type Config struct {
 	HTTPClient *http.Client
 }
 
-//Client is the result provided when the correct AccountSid & AuthToken are provided
-type Client struct {
+//InternalAuth is the result returned when the correct AccountSid & AuthToken are provided
+type InternalAuth struct {
 	BasicAuth string
 	BaseUrl string
 	Configuration Config
@@ -42,10 +42,10 @@ func basicAuth(username, password string) string {
 	return "Basic " + a
 }
 
-//NewDefaultClient Creates a new default client -- An Internal function.
-func NewDefaultClient(username, password string) Client{
+//NewDefaultAuth Creates a new default Auth object -- An Internal function.
+func NewDefaultAuth(username, password string) InternalAuth{
 	b := basicAuth(username, password)
-	c := Client{
+	c := InternalAuth{
 		BasicAuth:     b,
 		BaseUrl: "https://api.twilio.com/2010-04-01",
 		AccountSid: username,

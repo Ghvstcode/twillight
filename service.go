@@ -45,7 +45,7 @@ func OptEnableCustomCode(enableCustomCode bool) VerOptions{
 }
 
 //NewVerificationService A Verification Service is the set of common configurations used to create and check verifications. One verification service can be used to send multiple verification tokens.
-func (c *APIClient) NewVerificationService(FriendlyName string, opts ...VerOptions) (*verify.ResponseVerifyService, error) {
+func (c *Auth) NewVerificationService(FriendlyName string, opts ...VerOptions) (*verify.ResponseVerifyService, error) {
 	o := &utils.VerOpts{}
 	for _, opt := range opts {
 		opt(o)
@@ -54,22 +54,22 @@ func (c *APIClient) NewVerificationService(FriendlyName string, opts ...VerOptio
 	return res, err
 }
 
-func (c *APIClient) UpdateCodeLength(serviceSid, codeLength string)(*verify.ResponseVerifyService,error) {
+func (c *Auth) UpdateCodeLength(serviceSid, codeLength string)(*verify.ResponseVerifyService,error) {
 	res, err := service.InternalUpdateCodeLength(c.Client, serviceSid,codeLength)
 	return res, err
 }
 
-func (c *APIClient) UpdateFriendlyName(serviceSid, friendlyName string)(*verify.ResponseVerifyService,error) {
+func (c *Auth) UpdateFriendlyName(serviceSid, friendlyName string)(*verify.ResponseVerifyService,error) {
 	res, err := service.InternalUpdateFriendlyName(c.Client, serviceSid,friendlyName)
 	return res, err
 }
 
-func (c *APIClient) DeleteService(serviceSid string) error {
+func (c *Auth) DeleteService(serviceSid string) error {
 	err := service.InternalDeleteService(c.Client, serviceSid)
 	return err
 }
 
-func (c *APIClient) FetchService(serviceSid string)(*verify.ResponseVerifyService,error){
+func (c *Auth) FetchService(serviceSid string)(*verify.ResponseVerifyService,error){
 	res, err := service.InternalRetrieveService(c.Client, serviceSid)
 	return res, err
 }

@@ -21,7 +21,7 @@ type InternalVerification interface {
 }
 
 type ResponseVerifyService struct {
-	app.Client
+	Client app.InternalAuth
 	Sid                      string `json:"sid"`
 	AccountSid               string `json:"account_sid"`
 	FriendlyName             string `json:"friendly_name"`
@@ -163,7 +163,7 @@ func (s *ResponseVerifyService)InternalStartPsd2Verification(to, channel, amount
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", s.BasicAuth)
+	req.Header.Add("Authorization", s.Client.BasicAuth)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	res, err := client.Do(req)
@@ -205,13 +205,13 @@ func (s *ResponseVerifyService)InternalCompletePsd2Verification(to, code, amount
 	Data.Set("Code",code)
 	DataReader := strings.NewReader(Data.Encode())
 
-	client := s.Configuration.HTTPClient
+	client := s.Client.Configuration.HTTPClient
 
 	req, _ := http.NewRequest(method, requestUrl, DataReader)
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", s.BasicAuth)
+	req.Header.Add("Authorization", s.Client.BasicAuth)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	res, err := client.Do(req)

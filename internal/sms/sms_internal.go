@@ -9,10 +9,26 @@ import (
 	"strconv"
 	"strings"
 )
+type InternalSMSInterface interface {
+	InternalNewOutgoingMessage(to string, from string, msgbody string, opts utils.SmsOpts) (*ResponseSms, error)
+	InternalNewOutgoingWhatsappMessage(to string, from string, msgbody string, opts utils.SmsOpts) (*ResponseSms, error)
+	InternalNewOutgoingMediaMessage(to string, from string, msgbody string, mediaurl string, opts utils.SmsOpts) (*ResponseSms, error)
+	InternalRetrieveAllMessagesMedia(messageSid string) (*ResponseAllMessageMedia, error)
+	InternalRetrieveAllMessages() (*ResponseGetAllMessages, error)
+	InternalRetrieveAMessage(MessageSid string) (*ResponseSms, error)
+	InternalUpdateMessage(MessageSid, body string) (*ResponseSms, error)
+	InternalSendMessageFeedback(MessageSid, Outcome string) (*ResponseSendMessageFeedback, error)
+	InternalDeleteMessage(MessageSid string) (*ResponseSms, error)
+	InternalDeleteMessageMedia(MessageSid string, MediaSid string) error
+}
 
-func InternalNewOutgoingMessage(APIClient app.Client, to string, from string, msgbody string, opts utils.SmsOpts) (*ResponseSms, error){
+type MessageClient struct {
+	Tc app.InternalAuth
+}
 
-		requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages.json"
+func (m *MessageClient)InternalNewOutgoingMessage(to string, from string, msgbody string, opts utils.SmsOpts) (*ResponseSms, error){
+
+		requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages.json"
 		method := "POST"
 
 	vp := opts.ValidityPeriod
@@ -31,13 +47,13 @@ func InternalNewOutgoingMessage(APIClient app.Client, to string, from string, ms
 
 		//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
 
-		client := APIClient.Configuration.HTTPClient
+		client := m.Tc.Configuration.HTTPClient
 		//Errors from the API request usually have a
 		req, _ := http.NewRequest(method, requestUrl, DataReader)
 
 		req.BasicAuth()
 
-		req.Header.Add("Authorization", APIClient.BasicAuth)
+		req.Header.Add("Authorization", m.Tc.BasicAuth)
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 		res, err := client.Do(req)
@@ -68,9 +84,9 @@ func InternalNewOutgoingMessage(APIClient app.Client, to string, from string, ms
 return &r, nil
 }
 
-func InternalNewOutgoingWhatsappMessage(APIClient app.Client, to string, from string, msgbody string, opts utils.SmsOpts) (*ResponseSms, error){
+func (m *MessageClient)InternalNewOutgoingWhatsappMessage(to string, from string, msgbody string, opts utils.SmsOpts) (*ResponseSms, error){
 
-	requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages.json"
+	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages.json"
 	method := "POST"
 
 	vp := opts.ValidityPeriod
@@ -89,13 +105,13 @@ func InternalNewOutgoingWhatsappMessage(APIClient app.Client, to string, from st
 
 	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
 
-	client := APIClient.Configuration.HTTPClient
+	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a
 	req, _ := http.NewRequest(method, requestUrl, DataReader)
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", APIClient.BasicAuth)
+	req.Header.Add("Authorization", m.Tc.BasicAuth)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	res, err := client.Do(req)
@@ -125,9 +141,9 @@ func InternalNewOutgoingWhatsappMessage(APIClient app.Client, to string, from st
 	return &r, nil
 }
 
-func InternalNewOutgoingMediaMessage(APIClient app.Client, to string, from string, msgbody string, mediaurl string, opts utils.SmsOpts) (*ResponseSms, error){
+func (m *MessageClient)InternalNewOutgoingMediaMessage(to string, from string, msgbody string, mediaurl string, opts utils.SmsOpts) (*ResponseSms, error){
 
-	requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages.json"
+	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages.json"
 	method := "POST"
 
 	vp := opts.ValidityPeriod
@@ -147,13 +163,13 @@ func InternalNewOutgoingMediaMessage(APIClient app.Client, to string, from strin
 
 	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
 
-	client := APIClient.Configuration.HTTPClient
+	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a
 	req, _ := http.NewRequest(method, requestUrl, DataReader)
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", APIClient.BasicAuth)
+	req.Header.Add("Authorization", m.Tc.BasicAuth)
 
 
 	res, err := client.Do(req)
@@ -183,21 +199,21 @@ func InternalNewOutgoingMediaMessage(APIClient app.Client, to string, from strin
 	return &r, nil
 }
 
-func InternalRetrieveAllMessagesMedia(APIClient app.Client, messageSid string) (*ResponseAllMessageMedia, error){
+func (m *MessageClient)InternalRetrieveAllMessagesMedia(messageSid string) (*ResponseAllMessageMedia, error){
 
-	requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages" + messageSid+ "/Media.json"
+	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages" + messageSid+ "/Media.json"
 	method := "GET"
 
 
 	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
 
-	client := APIClient.Configuration.HTTPClient
+	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a
 	req, _ := http.NewRequest(method, requestUrl, nil)
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", APIClient.BasicAuth)
+	req.Header.Add("Authorization", m.Tc.BasicAuth)
 
 	res, err := client.Do(req)
 
@@ -226,21 +242,21 @@ func InternalRetrieveAllMessagesMedia(APIClient app.Client, messageSid string) (
 	return &r, nil
 }
 
-func InternalRetrieveAllMessages(APIClient app.Client) (*ResponseGetAllMessages, error){
+func (m *MessageClient)InternalRetrieveAllMessages() (*ResponseGetAllMessages, error){
 
-	requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages.json"
+	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages.json"
 	method := "GET"
 
 
 	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
 
-	client := APIClient.Configuration.HTTPClient
+	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a
 	req, _ := http.NewRequest(method, requestUrl, nil)
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", APIClient.BasicAuth)
+	req.Header.Add("Authorization", m.Tc.BasicAuth)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	res, err := client.Do(req)
@@ -270,21 +286,21 @@ func InternalRetrieveAllMessages(APIClient app.Client) (*ResponseGetAllMessages,
 	return &r, nil
 }
 
-func InternalRetrieveAMessage(APIClient app.Client, MessageSid string) (*ResponseSms, error){
+func (m *MessageClient)InternalRetrieveAMessage(MessageSid string) (*ResponseSms, error){
 
-	requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages"+ MessageSid +".json"
+	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages"+ MessageSid +".json"
 	method := "GET"
 
 
 	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
 
-	client := APIClient.Configuration.HTTPClient
+	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a
 	req, _ := http.NewRequest(method, requestUrl, nil)
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", APIClient.BasicAuth)
+	req.Header.Add("Authorization", m.Tc.BasicAuth)
 
 	res, err := client.Do(req)
 
@@ -313,9 +329,9 @@ func InternalRetrieveAMessage(APIClient app.Client, MessageSid string) (*Respons
 	return &r, nil
 }
 
-func InternalUpdateMessage(APIClient app.Client, MessageSid, body string) (*ResponseSms, error){
+func (m *MessageClient)InternalUpdateMessage(MessageSid, body string) (*ResponseSms, error){
 
-	requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages/"+ MessageSid +".json"
+	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages/"+ MessageSid +".json"
 	method := "POST"
 
 
@@ -325,13 +341,13 @@ func InternalUpdateMessage(APIClient app.Client, MessageSid, body string) (*Resp
 	Data.Set("Body",body)
 	DataReader := strings.NewReader(Data.Encode())
 
-	client := APIClient.Configuration.HTTPClient
+	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a
 	req, _ := http.NewRequest(method, requestUrl, DataReader)
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", APIClient.BasicAuth)
+	req.Header.Add("Authorization", m.Tc.BasicAuth)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	res, err := client.Do(req)
 
@@ -360,9 +376,9 @@ func InternalUpdateMessage(APIClient app.Client, MessageSid, body string) (*Resp
 	return &r, nil
 }
 
-func InternalSendMessageFeedback(APIClient app.Client, MessageSid, Outcome string) (*ResponseSendMessageFeedback, error){
+func (m *MessageClient)InternalSendMessageFeedback(MessageSid, Outcome string) (*ResponseSendMessageFeedback, error){
 
-	requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages/"+ MessageSid +"/Feedback.json"
+	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages/"+ MessageSid +"/Feedback.json"
 	method := "POST"
 
 
@@ -372,13 +388,13 @@ func InternalSendMessageFeedback(APIClient app.Client, MessageSid, Outcome strin
 	Data.Set("Outcome",Outcome)
 	DataReader := strings.NewReader(Data.Encode())
 
-	client := APIClient.Configuration.HTTPClient
+	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a
 	req, _ := http.NewRequest(method, requestUrl, DataReader)
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", APIClient.BasicAuth)
+	req.Header.Add("Authorization", m.Tc.BasicAuth)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	res, err := client.Do(req)
 
@@ -407,22 +423,22 @@ func InternalSendMessageFeedback(APIClient app.Client, MessageSid, Outcome strin
 	return &r, nil
 }
 
-func InternalDeleteMessage(APIClient app.Client, MessageSid string) (*ResponseSms, error){
+func (m *MessageClient)InternalDeleteMessage(MessageSid string) (*ResponseSms, error){
 
-	requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages/"+ MessageSid +".json"
+	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages/"+ MessageSid +".json"
 	method := "GET"
 
 
 	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
 
 
-	client := APIClient.Configuration.HTTPClient
+	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a
 	req, _ := http.NewRequest(method, requestUrl, nil)
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", APIClient.BasicAuth)
+	req.Header.Add("Authorization", m.Tc.BasicAuth)
 	res, err := client.Do(req)
 
 	if err != nil {
@@ -450,22 +466,22 @@ func InternalDeleteMessage(APIClient app.Client, MessageSid string) (*ResponseSm
 	return &r, nil
 }
 
-func InternalDeleteMessageMedia(APIClient app.Client, MessageSid string, MediaSid string) error {
+func (m *MessageClient)InternalDeleteMessageMedia(MessageSid string, MediaSid string) error {
 
-	requestUrl := APIClient.BaseUrl + "/Accounts/" + APIClient.AccountSid + "/Messages/"+ MessageSid +"/Media" + MediaSid + ".json"
+	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages/"+ MessageSid +"/Media" + MediaSid + ".json"
 	method := "DELETE"
 
 
 	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
 
 
-	client := APIClient.Configuration.HTTPClient
+	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a
 	req, _ := http.NewRequest(method, requestUrl, nil)
 
 	req.BasicAuth()
 
-	req.Header.Add("Authorization", APIClient.BasicAuth)
+	req.Header.Add("Authorization", m.Tc.BasicAuth)
 	res, err := client.Do(req)
 
 	if err != nil {
@@ -483,9 +499,8 @@ func InternalDeleteMessageMedia(APIClient app.Client, MessageSid string, MediaSi
 		return &e
 
 	}
-
-
 	return nil
-}
 
-//Type A! which should not be imported.
+	//return e.Error()
+
+}
