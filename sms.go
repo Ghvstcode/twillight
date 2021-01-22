@@ -5,19 +5,6 @@ import (
 	"github.com/GhvstCode/twillight/internal/utils"
 )
 
-//type SmsClient interface {
-//	NewOutgoingMessage(to string, from string, body string, opts ...SmsOptions) (*sms.ResponseSms, error)
-//	NewOutgoingMediaMessage(to string, from string, msgbody string, mediaUrl string, opts ...SmsOptions) (*sms.ResponseSms, error)
-//	NewOutgoingWhatsappMessage(to string, from string, body string, opts ...SmsOptions) (*sms.ResponseSms, error)
-//	RetrieveAllMessages() (*sms.ResponseGetAllMessages, error)
-//	RetrieveAllMessagesMedia(messageSid string) (*sms.ResponseAllMessageMedia, error)
-//	RetrieveMessage(messageSid string) (*sms.ResponseSms, error)
-//	SendMessageFeedback(messageSid, outcome string) (*sms.ResponseSendMessageFeedback, error)
-//	DeleteMessage(messageSid string) (*sms.ResponseSms, error)
-//	UpdateMessage(messageSid, body string) (*sms.ResponseSms, error)
-//	DeleteMessageMedia(messageSid, mediaSid string) error
-//}
-
 type SmsOptions func(opts *utils.SmsOpts)
 
 //OptStatusCallback This is the URL Twilio should call using the status_callback_method to send status information to your application. If specified, we POST these message status changes to the URL: queued, failed, sent, delivered, or undelivered

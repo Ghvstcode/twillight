@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func InternalGetAccountInfo(APIClient app.Client) (*ResponseAccount, error){
+func InternalGetAccountInfo(APIClient app.InternalAuth) (*ResponseAccount, error){
 
 	requestUrl := APIClient.BaseUrl + "/Accounts/.json"
 	method := "GET"

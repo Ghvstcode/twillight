@@ -15,7 +15,7 @@ const (
 	baseUrl = "https://verify.twilio.com/v2/"
 )
 
-func InternalNewVerificationService( APIClient app.Client, friendlyName string, opts utils.VerOpts)(*verify.ResponseVerifyService, error){
+func InternalNewVerificationService( APIClient app.InternalAuth, friendlyName string, opts utils.VerOpts)(*verify.ResponseVerifyService, error){
 	requestUrl := baseUrl + "/Services"
 	method := "POST"
 
@@ -74,7 +74,7 @@ func InternalNewVerificationService( APIClient app.Client, friendlyName string, 
 	return &r, nil
 }
 
-func InternalUpdateCodeLength(APIClient app.Client, serviceSid,codeLength string)(*verify.ResponseVerifyService, error){
+func InternalUpdateCodeLength(APIClient app.InternalAuth, serviceSid,codeLength string)(*verify.ResponseVerifyService, error){
 
 	requestUrl := baseUrl + "/Services/" + serviceSid
 	method := "POST"
@@ -119,7 +119,7 @@ func InternalUpdateCodeLength(APIClient app.Client, serviceSid,codeLength string
 	return &r, nil
 }
 
-func InternalUpdateFriendlyName(APIClient app.Client, serviceSid,friendlyName string)(*verify.ResponseVerifyService, error){
+func InternalUpdateFriendlyName(APIClient app.InternalAuth, serviceSid,friendlyName string)(*verify.ResponseVerifyService, error){
 
 	requestUrl := baseUrl + "/Services/" + serviceSid
 	method := "POST"
@@ -164,7 +164,7 @@ func InternalUpdateFriendlyName(APIClient app.Client, serviceSid,friendlyName st
 	return &r, nil
 }
 
-func InternalDeleteService(APIClient app.Client, serviceSid string) error {
+func InternalDeleteService(APIClient app.InternalAuth, serviceSid string) error {
 
 	requestUrl := baseUrl + "/Services/" + serviceSid
 	method := "DELETE"
@@ -200,7 +200,7 @@ func InternalDeleteService(APIClient app.Client, serviceSid string) error {
 	return &e
 }
 
-func InternalRetrieveService(APIClient app.Client, serviceSid string) (*verify.ResponseVerifyService, error) {
+func InternalRetrieveService(APIClient app.InternalAuth, serviceSid string) (*verify.ResponseVerifyService, error) {
 
 	requestUrl := baseUrl + "/Services/" + serviceSid
 	method := "GET"

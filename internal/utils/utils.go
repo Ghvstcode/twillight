@@ -24,3 +24,7 @@ type VerOpts struct {
 	//Whether to allow sending verifications with a custom code instead of a randomly generated one. Not available for all customers.
 	CustomCodeEnabled bool
 }
+
+type LookupAddons struct {
+	Addon string
+}
