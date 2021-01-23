@@ -165,18 +165,17 @@ cases := [] struct{
 
 func TestStartVerification(t *testing.T) {
 	cases := [] struct{
-		m MockVerifyService
+		m MockSmsService
 		to string
-		channel string
-		ExpectedSid string
+		from string
+		body string
 		ExpectedErr error
 		ExpectedValid bool
 		ExpectedURL string
 	}{
 		{
-			m: MockVerifyService{
+			m: MockSmsService{
 				Err: nil,
-				CodeLength: 4,
 				Sid: "VA12345",
 			},
 			to: "987654321",
@@ -190,7 +189,7 @@ func TestStartVerification(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		res, err := twillight.StartVerification(&c.m, c.to, c.channel)
+		res, err := twillight.NewOutgoingMessage(&c.m, c.to, c.from, c.body)
 		if !reflect.DeepEqual(err, c.ExpectedErr) {
 			t.Fatalf("Expected err to be %q but it was %q", c.ExpectedErr, err)
 		}
