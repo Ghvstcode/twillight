@@ -1,6 +1,7 @@
 package twillight_test
 
 import (
+	"errors"
 	"github.com/GhvstCode/twillight"
 	"github.com/GhvstCode/twillight/internal/sms"
 	"github.com/GhvstCode/twillight/internal/utils"
@@ -11,10 +12,32 @@ import (
 type MockSmsService struct {
 	Err error
 	Sid string
+	AccountSID string
 }
 
 func(m *MockSmsService) InternalNewOutgoingMessage(to string, from string, msgbody string, opts utils.SmsOpts) (*sms.ResponseSms, error) {
+	if m.Err != nil {
+		return nil, errors.New("an Error Occurred, Unable to complete verification")
+	}
 
+	if to == "" {
+		return nil, errors.New("invalid TO number")
+	}
+
+	if from == "" {
+		return nil, errors.New("invalid FROM number")
+	}
+
+	return &sms.ResponseSms{
+		AccountSid: m.AccountSID,
+		Status: "sent",
+		Body: msgbody,
+		From: from,
+		ErrorCode: nil,
+		To: to,
+		Sid: m.Sid,
+		URI: "/2010-04-01/Accounts/" + m.AccountSID + "/Messages/" + m.Sid+ ".json",
+	}, nil
 }
 func(m *MockSmsService)InternalNewOutgoingWhatsappMessage(to string, from string, msgbody string, opts utils.SmsOpts) (*sms.ResponseSms, error){
 
@@ -46,47 +69,56 @@ func(m *MockSmsService)InternalDeleteMessageMedia(MessageSid string, MediaSid st
 
 func TestNewOutgoingMessage(t *testing.T) {
 	cases := [] struct{
-		m MockVerifyService
+		m MockSmsService
 		to string
-		code string
-		ExpectedSid string
+		from string
+		body string
 		ExpectedErr error
-		ExpectedValid bool
-		ExpectedChannel string
+		ExpectedStatus string
+		ExpectedURL string
+		ExpectedSid string
+		ExpectedAccountSid string
+		ExpectedErrorCode string
 	}{
 		{
-			m: MockVerifyService{
-				VerifyChannel: "SMS",
+			m: MockSmsService{
 				Err: nil,
-				CodeLength: 4,
 				Sid: "12345",
+				AccountSID: "4444444",
 			},
 			to: "987654321",
-			code: "9876",
+			from: "000009999777755",
+			body: "Hello World",
 			ExpectedSid: "12345",
 			ExpectedErr: nil,
-			ExpectedValid: true,
-			ExpectedChannel: "SMS",
+			ExpectedStatus: "sent",
+			ExpectedErrorCode: nil,
+			ExpectedURL: "/2010-04-01/Accounts/4444444/Messages/12345.json",
 
 		},
 	}
 
 	for _, c := range cases {
-		res, err := twillight.CompleteVerification(&c.m, c.to, c.code)
+		res, err := twillight.NewOutgoingMessage(&c.m, c.to, c.from, c.body)
 		if !reflect.DeepEqual(err, c.ExpectedErr) {
 			t.Errorf("Expected err to be %q but it was %q", c.ExpectedErr, err)
 		}
+		if res != nil {
+			if c.ExpectedSid != res.Sid {
+				t.Fatalf("Expected SID to be %s but got %s", c.ExpectedSid, res.Sid)
+			}
 
-		if c.ExpectedSid != res.Sid {
-			t.Fatalf("Expected SID to be %s but got %s", c.ExpectedSid, res.Sid)
-		}
+			if c.ExpectedAccountSid != res.AccountSid {
+				t.Fatalf("Expected AccountSID to be %s but got %s", c.ExpectedAccountSid, res.AccountSid)
+			}
 
-		if c.ExpectedValid != res.Valid {
-			t.Fatalf("Expected Valid field to be %t but got %t", c.ExpectedValid, res.Valid)
-		}
+			if c.ExpectedErrorCode != res.ErrorCode {
+				t.Fatalf("Expected ErrorCode to be %s but got %s", c.ExpectedErrorCode, res.ErrorCode)
+			}
 
-		if c.ExpectedChannel != res.Channel {
-			t.Fatalf("Expected Valid field to be %s but got %s", c.ExpectedChannel, res.Channel)
+			if c.ExpectedURL != res.URI {
+				t.Fatalf("Expected URL to be %s but got %s", c.ExpectedURL, res.URI)
+			}
 		}
 	}
 
