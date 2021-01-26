@@ -381,9 +381,6 @@ func (m *MessageClient)InternalSendMessageFeedback(MessageSid, Outcome string) (
 	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages/"+ MessageSid +"/Feedback.json"
 	method := "POST"
 
-
-	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
-
 	Data := url.Values{}
 	Data.Set("Outcome",Outcome)
 	DataReader := strings.NewReader(Data.Encode())

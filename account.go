@@ -5,7 +5,7 @@ import (
 )
 
 //GetAccountInfo Returns account information
-func (c *Auth) GetAccountInfo() (*account.ResponseAccount, error) {
-	res, err := account.InternalGetAccountInfo(c.Client)
+func (a *Auth) GetAccountInfo() (*account.ResponseAccount, error) {
+	res, err := account.InternalGetAccountInfo(a.Client)
 	return res, err
 }
