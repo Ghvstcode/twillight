@@ -11,7 +11,7 @@ type Auth struct {
 
 
 
-//NewAuth creates an authenticated client that can be used to interact with API's
+//NewAuth creates an authenticated client that can be used to interact with Twilight.Your Account Sid and Auth Token from twilio.com/console.
 func NewAuth(accountSid, authToken string) *Auth {
 	client := app.NewDefaultAuth(accountSid, authToken)
 	apiClient := Auth{
@@ -21,6 +21,7 @@ func NewAuth(accountSid, authToken string) *Auth {
 	return &apiClient
 }
 
+//ConfigureHttp accepts a HTTP client that would be used for the client.
 func (a *Auth) ConfigureHttp(http *http.Client) *Auth{
 	a.Client.Configuration.HTTPClient = http
 	return a

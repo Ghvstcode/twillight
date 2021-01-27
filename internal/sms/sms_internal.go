@@ -18,7 +18,7 @@ type InternalSMSInterface interface {
 	InternalRetrieveAMessage(MessageSid string) (*ResponseSms, error)
 	InternalUpdateMessage(MessageSid, body string) (*ResponseSms, error)
 	InternalSendMessageFeedback(MessageSid, Outcome string) (*ResponseSendMessageFeedback, error)
-	InternalDeleteMessage(MessageSid string) (*ResponseSms, error)
+	InternalDeleteMessage(MessageSid string)  error
 	InternalDeleteMessageMedia(MessageSid string, MediaSid string) error
 }
 
@@ -204,9 +204,6 @@ func (m *MessageClient)InternalRetrieveAllMessagesMedia(messageSid string) (*Res
 	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages" + messageSid+ "/Media.json"
 	method := "GET"
 
-
-	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
-
 	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a
 	req, _ := http.NewRequest(method, requestUrl, nil)
@@ -246,9 +243,6 @@ func (m *MessageClient)InternalRetrieveAllMessages() (*ResponseGetAllMessages, e
 
 	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages.json"
 	method := "GET"
-
-
-	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
 
 	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a
@@ -420,13 +414,11 @@ func (m *MessageClient)InternalSendMessageFeedback(MessageSid, Outcome string) (
 	return &r, nil
 }
 
-func (m *MessageClient)InternalDeleteMessage(MessageSid string) (*ResponseSms, error){
+func (m *MessageClient)InternalDeleteMessage(MessageSid string) error {
 
 	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages/"+ MessageSid +".json"
-	method := "GET"
+	method := "DELETE"
 
-
-	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
 
 
 	client := m.Tc.Configuration.HTTPClient
@@ -439,38 +431,27 @@ func (m *MessageClient)InternalDeleteMessage(MessageSid string) (*ResponseSms, e
 	res, err := client.Do(req)
 
 	if err != nil {
-		return nil, &app.ErrorResponse{Code: 0, Message: err.Error()}
+		return &app.ErrorResponse{Code: 0, Message: err.Error()}
 	}
 
 	defer res.Body.Close()
 
 	var e app.ErrorResponse
-	var r ResponseSms
-	if res.StatusCode  != http.StatusOK {
+	if res.StatusCode  != http.StatusNoContent{
 		err := json.NewDecoder(res.Body).Decode(&e)
 		if err != nil {
-			return nil, &app.ErrorResponse{Code: 0, Message: err.Error()}
+			return &app.ErrorResponse{Code: 0, Message: err.Error()}
 		}
-		return nil, &e
+		return &e
 
 	}
-
-	err = json.NewDecoder(res.Body).Decode(&r)
-	if err != nil {
-		return nil, &app.ErrorResponse{Code: 0, Message: err.Error()}
-	}
-
-	return &r, nil
+	return nil
 }
 
 func (m *MessageClient)InternalDeleteMessageMedia(MessageSid string, MediaSid string) error {
 
 	requestUrl := m.Tc.BaseUrl + "/Accounts/" + m.Tc.AccountSid + "/Messages/"+ MessageSid +"/Media" + MediaSid + ".json"
 	method := "DELETE"
-
-
-	//payload := strings.NewReader("To=%2B2347032541112&From=%2B16592045850&Body=FOR%20YOU%20BABY&ProvideFeedback=true&MediaUrl=https%3A%2F%2Fdemo.twilio.com%2Fowl.png")
-
 
 	client := m.Tc.Configuration.HTTPClient
 	//Errors from the API request usually have a

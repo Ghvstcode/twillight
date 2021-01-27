@@ -28,13 +28,15 @@ func OptValidityPeriod(period string) SmsOptions {
 	}
 }
 
+//NewSmsClient Creates a New SMSClient for performing SMS operations with Twilight.
 func (a *Auth) NewSmsClient () *sms.MessageClient{
 	return &sms.MessageClient{
 		Tc: a.Client,
 	}
 }
 
-//NewOutgoingMessage sends a new SMS message to the numbers provided.
+//NewOutgoingMessage sends a new SMS message to the numbers provided. You can pass additional options! If you want to send messages while in trial mode, you must first verify your 'To' phone number with Twilio. You can verify your phone number by adding it to your Verified Caller IDs in the console.
+//If the body of your message is more than 160 GSM-7 characters (or 70 UCS-2characters), Twilio will send the message as a segmented SMS and charge your account accordingly.
 func NewOutgoingMessage(s sms.InternalSMSInterface, to string, from string, body string, opts ...SmsOptions) (*sms.ResponseSms, error) {
 	o := &utils.SmsOpts{}
 	for _, opt := range opts {
@@ -55,7 +57,11 @@ func NewOutgoingWhatsappMessage(s sms.InternalSMSInterface,to string, from strin
 	return res, err
 }
 
-//NewOutgoingMediaMessage sends a new MMS
+//NewOutgoingMediaMessage sends a new MMS.
+//While you can send text-only messages almost anywhere on the planet, sending media is currently only available in the US and Canada.
+//Sending an MMS message looks a lot like sending an SMS, but it includes a new parameter, MediaUrl.
+//This parameter specifies the URL of the media you want to include with your message.Twilio supports .gif, .png, or .jpeg content and will format the image on your recipient's device.
+//Messages sent via Twilio can include up to 10 media files that have a total size of up to 5MB. Twilio will resize images as necessary for successful delivery based on carrier specifications. Messages with over 5MB of media will not be accepted.
 func NewOutgoingMediaMessage(s sms.InternalSMSInterface,to string, from string, msgbody string, mediaUrl string, opts ...SmsOptions) (*sms.ResponseSms, error) {
 	o := &utils.SmsOpts{}
 	for _, opt := range opts {
@@ -66,7 +72,10 @@ func NewOutgoingMediaMessage(s sms.InternalSMSInterface,to string, from string, 
 	return res, err
 }
 
-//RetrieveAllMessages retrieves all previously sent message
+//RetrieveAllMessages Returns a list of messages associated with your account.
+//If you are using this library, the list includes paging information. you may want to use the provided nextpageuri.
+//Using the NextPageURI ensures that your next request picks up where it left off and can prevent you from retrieving duplicate data if you are actively sending or receiving messages.
+//When getting the list of all messages, results will be sorted on the DateSent field with the most recent messages appearing first.
 func RetrieveAllMessages(s sms.InternalSMSInterface) (*sms.ResponseGetAllMessages, error) {
 	res, err := s.InternalRetrieveAllMessages()
 	return res, err
@@ -78,34 +87,37 @@ func RetrieveAllMessagesMedia(s sms.InternalSMSInterface, messageSid string) (*s
 	return res, err
 }
 
-//RetrieveAllMessages retrieves a previously sent message
+//RetrieveMessage retrieves a single message.
 func RetrieveMessage(s sms.InternalSMSInterface,messageSid string) (*sms.ResponseSms, error) {
 	res, err := s.InternalRetrieveAMessage(messageSid)
 	return res, err
 }
 
+//Message Feedback represents the user-reported outcome of a message.
+//For Message Feedback to be sent, the provide feedback option should be set to true when the message is being sent.
 //https://www.twilio.com/console/sms/insights/delivery?q=(activeInsightsView:overview,filters:!((field:feedback_outcome,filter_type:EQUALS,values:!(UNCONFIRMED))))
-//Message Feedback represents the user-reported outcome of a message. For Message Feedback to be sent, the provide feedback option should be set to true when the message is being sent.
 func SendMessageFeedback(s sms.InternalSMSInterface,messageSid, outcome string) (*sms.ResponseSendMessageFeedback, error) {
 	res, err := s.InternalSendMessageFeedback(messageSid, outcome)
 	return res, err
 }
 
-//UpdateMessage Updates the body of a Message resource. To redact a message, set the body property to an empty string
+//UpdateMessage Updates the body of a Message resource.
+//To redact a message, set the body property to an empty string
 //https://www.twilio.com/docs/sms/api/message-resource#update-a-message-resource
 func UpdateMessage(s sms.InternalSMSInterface,messageSid, body string) (*sms.ResponseSms, error) {
 	res, err := s.InternalUpdateMessage( messageSid, body)
 	return res, err
 }
 
-//DeleteMessage deletes a Message record from your account. Once the record is deleted, it will no longer appear in the API and Account Portal logs! On successful deletion, It returns the deleted message.
+//DeleteMessage deletes a Message record from your account. Once the record is deleted, it will no longer appear in the API and Account Portal logs!
+//On successful deletion, It returns No error.
 //https://www.twilio.com/docs/sms/api/message-resource#delete-a-message-resource
-func DeleteMessage(s sms.InternalSMSInterface,messageSid string) (*sms.ResponseSms, error) {
-	res, err := s.InternalDeleteMessage( messageSid)
-	return res, err
+func DeleteMessage(s sms.InternalSMSInterface,messageSid string) error {
+	 err := s.InternalDeleteMessage( messageSid)
+	return  err
 }
 
-//DeleteMessageMedia deletes the specified media record from your account. Once the record is deleted, it will no longer appear in the API and Account Portal logs! On successful deletion, It returns the deleted message.
+//DeleteMessageMedia deletes the specified media record from your account. Once the record is deleted, it will no longer appear in the API and Account Portal logs! On successful deletion, It returns NO error - An Error value of NIL.
 //https://www.twilio.com/docs/sms/api/message-resource#message-media-subresources
 func DeleteMessageMedia(s sms.InternalSMSInterface,messageSid, mediaSid string) error {
 	err := s.InternalDeleteMessageMedia(messageSid, mediaSid)

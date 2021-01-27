@@ -16,10 +16,11 @@ import (
 func main() {
 	a := twillight.NewAuth("ACd4859955d9ff9fb86b0a6daabd2bd699", "f7c9a17f472979d2841c0d7a5e7495c6")
 	b := a.NewSmsClient()
-	c, err := twillight.NewOutgoingMessage(b, "+2347", "+16592045850", "helloWorld")
+	c, err := twillight.NewOutgoingMessage(b, "+2347032541112", "+16592045850", "helloWorld")
 	//c := twillight.NewClient("ACd4859955d9ff9fb86b0a6daabd2bd699", "f7c9a17f472979d2841c0d7a5e7495c6")
 
-	fmt.Println(c)
+
+	fmt.Println("C", c)
 
 	if err != nil {
 		if err, ok := err.(*app.ErrorResponse); ok {
@@ -28,6 +29,10 @@ func main() {
 		fmt.Print("An Error Occurred: ", err)
 	}
 
+	sid := c.Sid
+	e, f := twillight.DeleteMessage(b, sid)
+	fmt.Println("E",e)
+	fmt.Println("F",f)
 	//fmt.Println("Message Sent: ", res)
 
 
