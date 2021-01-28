@@ -29,6 +29,7 @@ func OptValidityPeriod(period string) SmsOptions {
 }
 
 //NewSmsClient Creates a New SMSClient for performing SMS operations with Twilight.
+//The returned MessageClient Implements the InternalSMSInterface Interface.
 func (a *Auth) NewSmsClient () *sms.MessageClient{
 	return &sms.MessageClient{
 		Tc: a.Client,

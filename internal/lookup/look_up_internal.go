@@ -16,7 +16,7 @@ type ClientLookup struct {
 }
 
 func (c *ClientLookup)InternalNewPhoneLookup(phone string, addons utils.LookupAddons)(*ResponseLookup, error){
-
+	//c.Cl.BaseUrl = "https://lookups.twilio.com/v1/PhoneNumbers/" + phone
 	requestUrl := "https://lookups.twilio.com/v1/PhoneNumbers/" + phone
 
 	if addons.Addon == "nomorobo_spamscore" {

@@ -172,21 +172,16 @@ func(m *MockSmsService)InternalSendMessageFeedback(MessageSid, Outcome string) (
 		Outcome:     Outcome,
 	}, nil
 }
-func(m *MockSmsService)InternalDeleteMessage(MessageSid string) (*sms.ResponseSms, error){
+func(m *MockSmsService)InternalDeleteMessage(MessageSid string) error {
 	if m.Err != nil {
-		return nil, errors.New("an Error Occurred, Unable to complete verification")
+		return errors.New("an Error Occurred, Unable to complete verification")
 	}
 
 	if MessageSid == "" {
-		return nil, errors.New("no Message SID")
+		return errors.New("no Message SID")
 	}
 
-	return &sms.ResponseSms{
-		AccountSid: m.AccountSID,
-		Status: "sent",
-		ErrorCode: nil,
-		Sid: MessageSid,
-	}, nil
+	return  nil
 }
 func(m *MockSmsService)InternalDeleteMessageMedia(MessageSid string, MediaSid string) error {
 	if m.Err != nil {
