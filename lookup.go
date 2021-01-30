@@ -1,8 +1,10 @@
 package twillight
 
 import (
+	"github.com/GhvstCode/twillight/internal/app"
 	"github.com/GhvstCode/twillight/internal/lookup"
 	"github.com/GhvstCode/twillight/internal/utils"
+	"net/http"
 )
 
 type LookupAddon func(opts *utils.LookupAddons)
@@ -30,7 +32,13 @@ func WhitePagesAddon() LookupAddon{
 //NewLookupClient creates a new Lookup function which can be used with the functions associated with phone number loookup
 func (a *Auth)NewLookupClient() *lookup.ClientLookup{
 	return &lookup.ClientLookup{
-		Cl: a.Client,
+		Cl: app.InternalAuth{
+			BaseUrl: "https://lookups.twilio.com/v1/PhoneNumbers/",
+			BasicAuth: a.Client.BasicAuth,
+			Configuration: struct{ HTTPClient *http.Client }{HTTPClient: a.Client.Configuration.HTTPClient},
+			AccountSid: a.Client.AccountSid,
+		},
+
 	}
 }
 

@@ -17,10 +17,11 @@ type ClientLookup struct {
 
 func (c *ClientLookup)InternalNewPhoneLookup(phone string, addons utils.LookupAddons)(*ResponseLookup, error){
 	//c.Cl.BaseUrl = "https://lookups.twilio.com/v1/PhoneNumbers/" + phone
-	requestUrl := "https://lookups.twilio.com/v1/PhoneNumbers/" + phone
+	requestUrl := c.Cl.BaseUrl + phone
 
 	if addons.Addon == "nomorobo_spamscore" {
-		requestUrl = "https://lookups.twilio.com/v1/PhoneNumbers/" + phone +"?AddOns=nomorobo_spamscore"
+		//requestUrl = "https://lookups.twilio.com/v1/PhoneNumbers/" + phone +"?AddOns=nomorobo_spamscore"
+		requestUrl = c.Cl.BaseUrl + phone + "?AddOns=nomorobo_spamscore"
 	}
 	if addons.Addon == "payfone_tcpa_compliance" {
 		requestUrl = "https://lookups.twilio.com/v1/PhoneNumbers/"+ phone +"?AddOns=payfone_tcpa_compliance&AddOns.payfone_tcpa_compliance.right_party_contacted_date=20160101&Type=carrier"
