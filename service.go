@@ -1,9 +1,9 @@
 package twillight
 
 import (
-	"github.com/GhvstCode/twillight/internal/service"
-	"github.com/GhvstCode/twillight/internal/utils"
-	"github.com/GhvstCode/twillight/internal/verify"
+	"github.com/Ghvstcode/twillight/internal/service"
+	"github.com/Ghvstcode/twillight/internal/utils"
+	"github.com/Ghvstcode/twillight/internal/verify"
 )
 
 type ServiceOptions func(opts *utils.ServiceOpts)
