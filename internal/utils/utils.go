@@ -12,7 +12,7 @@ type SmsOpts struct {
 }
 
 //VerOpts are the options that can be passed when creating new Verify Service
-type VerOpts struct {
+type ServiceOpts struct {
 	//The length of the verification code to generate. Must be an integer value between 4 and 10, inclusive.
 	CodeLength string
 	//Whether to perform a lookup with each verification started and return info about the phone number.
