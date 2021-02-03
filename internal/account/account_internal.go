@@ -2,7 +2,7 @@ package account
 
 import (
 	"encoding/json"
-	"github.com/GhvstCode/twillight/internal/app"
+	"github.com/Ghvstcode/twillight/internal/app"
 	"net/http"
 )
 

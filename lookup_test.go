@@ -2,9 +2,9 @@ package twillight_test
 
 import (
 	"errors"
-	"github.com/GhvstCode/twillight"
-	"github.com/GhvstCode/twillight/internal/lookup"
-	"github.com/GhvstCode/twillight/internal/utils"
+	"github.com/Ghvstcode/twillight"
+	"github.com/Ghvstcode/twillight/internal/lookup"
+	"github.com/Ghvstcode/twillight/internal/utils"
 	"reflect"
 	"testing"
 )

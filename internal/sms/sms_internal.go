@@ -2,8 +2,8 @@ package sms
 
 import (
 	"encoding/json"
-	"github.com/GhvstCode/twillight/internal/app"
-	"github.com/GhvstCode/twillight/internal/utils"
+	"github.com/Ghvstcode/twillight/internal/app"
+	"github.com/Ghvstcode/twillight/internal/utils"
 	"net/http"
 	"net/url"
 	"strconv"

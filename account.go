@@ -1,7 +1,7 @@
 package twillight
 
 import (
-	"github.com/GhvstCode/twillight/internal/account"
+	"github.com/Ghvstcode/twillight/internal/account"
 )
 
 //GetAccountInfo Returns account information

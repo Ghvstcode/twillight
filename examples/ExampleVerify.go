@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/GhvstCode/twillight"
-	"github.com/GhvstCode/twillight/internal/verify"
+	"github.com/Ghvstcode/twillight"
+	"github.com/Ghvstcode/twillight/internal/verify"
 )
 
 func exampleVerifyService(auth *twillight.Auth,FriendlyName string, opts twillight.VerOptions)(*verify.ResponseVerifyService, error){

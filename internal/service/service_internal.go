@@ -2,9 +2,9 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/GhvstCode/twillight/internal/app"
-	"github.com/GhvstCode/twillight/internal/utils"
-	"github.com/GhvstCode/twillight/internal/verify"
+	"github.com/Ghvstcode/twillight/internal/app"
+	"github.com/Ghvstcode/twillight/internal/utils"
+	"github.com/Ghvstcode/twillight/internal/verify"
 	"net/http"
 	"net/url"
 	"strconv"

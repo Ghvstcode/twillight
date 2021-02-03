@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/GhvstCode/twillight"
-	"github.com/GhvstCode/twillight/internal/lookup"
+	"github.com/Ghvstcode/twillight"
+	"github.com/Ghvstcode/twillight/internal/lookup"
 )
 
 func exampleLookupService(auth *twillight.Auth)*lookup.ClientLookup{

@@ -2,7 +2,7 @@ package verify
 
 import (
 	"encoding/json"
-	"github.com/GhvstCode/twillight/internal/app"
+	"github.com/Ghvstcode/twillight/internal/app"
 	"net/http"
 	"net/url"
 	"strings"
