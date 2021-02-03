@@ -1,7 +1,7 @@
 package twillight
 
 import (
-	"github.com/GhvstCode/twillight/internal/app"
+	"github.com/Ghvstcode/twillight/internal/app"
 	"net/http"
 )
 
