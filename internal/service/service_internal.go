@@ -15,7 +15,7 @@ const (
 	baseUrl = "https://verify.twilio.com/v2/"
 )
 
-func InternalNewVerificationService( APIClient app.InternalAuth, friendlyName string, opts utils.VerOpts)(*verify.ResponseVerifyService, error){
+func InternalNewVerificationService( APIClient app.InternalAuth, friendlyName string, opts utils.ServiceOpts)(*verify.ResponseVerifyService, error){
 	requestUrl := baseUrl + "/Services"
 	method := "POST"
 

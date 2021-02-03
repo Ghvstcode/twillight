@@ -3,67 +3,22 @@ package main
 import (
 	"fmt"
 	"github.com/GhvstCode/twillight"
+	"os"
 )
 
-
-//func NewSms(c *twillight.APIClient)(*sms.ResponseSms, error){
-//	res, err := c.NewOutgoingMessage("+2347", "+16592045850", "Hello Tobi", twillight.OptProvideFeedback(true))
-//
-//	return res,err
-//}
 
 func main() {
 	a := twillight.NewAuth("ACd4859955d9ff9fb86b0a6daabd2bd699", "f7c9a17f472979d2841c0d7a5e7495c6")
 
-
 	l := a.NewLookupClient()
 
-	fmt.Println(l.Cl.BaseUrl)
-	res, err := twillight.LookupPhoneNumber(l, "+2347032541112")
+	res, err := twillight.LookupPhoneNumber(l, "+23470377777777")
 
-	fmt.Println(res)
-	fmt.Println(err)
-	//er := err.(*app.ErrorResponse)
-	//fmt.Println(er.ErrorCode())
+	if err != nil {
+		fmt.Print("An Error Occurred: ", err)
+		os.Exit(1)
+	}
 
-
-
-
-	//b := a.NewSmsClient()
-	//c, err := twillight.NewOutgoingMessage(b, "+2347", "+16592045850", "helloWorld")
-	////c := twillight.NewClient("ACd4859955d9ff9fb86b0a6daabd2bd699", "f7c9a17f472979d2841c0d7a5e7495c6")
-	//
-	//
-	//fmt.Println("C", c)
-	//
-	//if err != nil {
-	//	if err, ok := err.(*app.ErrorResponse); ok {
-	//		fmt.Println("Error Code:", err.ErrorCode())
-	//	}
-	//	fmt.Print("An Error Occurred: ", err)
-	//}
-	//
-	//sid := c.Sid
-	//f := twillight.DeleteMessage(b, sid)
-	//fmt.Println("F",f)
-	//fmt.Println("Message Sent: ", res)
-
-
-
-
-
-
-
-	//r, err := newVerify(c)
-	//if err != nil {
-	//	fmt.Print("An Error Occurred: ", err)
-	//	os.Exit(1)
-	//}
-	//
-	//r, err = startVerification(c,r,"", "")
-	//if err != nil {
-	//	fmt.Print("An Error Occurred: ", err)
-	//	os.Exit(1)
-	//}
+	fmt.Println(res.CallerName)
 }
 
