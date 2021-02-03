@@ -13,4 +13,34 @@ With this project, you can interact with the following Twilio APIs <br>
  * Lookup API
 
 ### USAGE
-The full examples can be found here
+The full examples can be found [here](https://github.com/Ghvstcode/twilight/blob/main/examples/main.go)<br>
+
+* To get started with this library, you have to first authenticate. You can do this by calling the NewAuth function and passing your Account SID & Auth Token gotten from your Twilio console.<br>
+* Next, You have to create a client for the API you intend to interact with. The created clients implement the interface the core functions require as their first argument<br>
+* 5 digit error codes are Twilio errors. 0 error codes are my fault. You could check [here](https://www.twilio.com/docs/api/errors) for a list of all Twilio error codes<br>
+
+This is an example showning how to use this library to send an SMS<br>
+
+```Golang
+	a := twillight.NewAuth("ACxxxxxxx", "f7xxxxxxxxx")
+
+	smsClient := a.NewSmsClient()
+
+	res, err := twillight.NewOutgoingMessage(smsClient, "+443566778", "+1543222", "HelloWorld")
+
+	if err != nil {
+		er := err.(*app.ErrorResponse)
+			fmt.Println("An Error Occured! status Code is", er.ErrorCode())
+		
+		fmt.Println(err.Error())
+	}
+	
+	fmt.Println(res.Status)
+  ```
+
+### Issues & Contributions
+* You encountered any issues while using this[Or just want to mess around]? Go ahead and create a new Issue!<br>
+* I would love to see this project grow, If you have any contributions or ideas, please let me know! Send in your PR's
+### Notes/To-Do 
+- [ ] Improve Test Coverage
+- [ ] Add more API's
