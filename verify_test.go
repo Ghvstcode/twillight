@@ -2,8 +2,8 @@ package twillight_test
 
 import (
 	"errors"
-	"github.com/GhvstCode/twillight"
-	"github.com/GhvstCode/twillight/internal/verify"
+	"github.com/Ghvstcode/twillight"
+	"github.com/Ghvstcode/twillight/internal/verify"
 	"reflect"
 	"testing"
 )

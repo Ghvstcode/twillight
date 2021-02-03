@@ -1,7 +1,7 @@
 package twillight
 
 import (
-	"github.com/GhvstCode/twillight/internal/verify"
+	"github.com/Ghvstcode/twillight/internal/verify"
 )
 
 //StartVerification will send a token to the end user through the specified channel.

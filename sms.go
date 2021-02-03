@@ -1,8 +1,8 @@
 package twillight
 
 import (
-	"github.com/GhvstCode/twillight/internal/sms"
-	"github.com/GhvstCode/twillight/internal/utils"
+	"github.com/Ghvstcode/twillight/internal/sms"
+	"github.com/Ghvstcode/twillight/internal/utils"
 )
 
 type SmsOptions func(opts *utils.SmsOpts)
