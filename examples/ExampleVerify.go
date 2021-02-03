@@ -6,7 +6,7 @@ import (
 	"github.com/Ghvstcode/twillight/internal/verify"
 )
 
-func exampleVerifyService(auth *twillight.Auth,FriendlyName string, opts twillight.VerOptions)(*verify.ResponseVerifyService, error){
+func exampleVerifyService(auth *twillight.Auth,FriendlyName string, opts twillight.ServiceOptions)(*verify.ResponseVerifyService, error){
 	exampleNewVerifyService, err := auth.NewVerificationService(FriendlyName, opts)
 	if err != nil{
 		fmt.Println(err)
