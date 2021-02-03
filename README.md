@@ -4,7 +4,7 @@ Twilight is an unofficial Golang SDK for Twilio APIs. Twilight was born as a res
 
 
 ### INSTALLATION
-To use this in your project, Run the following Commands
+To use this in your project, Run the following command <br>
 ``$ go get -u github.com/Ghvstcode/twilight`` <br>
 
 With this project, you can interact with the following Twilio APIs <br>
@@ -13,3 +13,4 @@ With this project, you can interact with the following Twilio APIs <br>
  * Lookup API
 
 ### USAGE
+The full examples can be found here
