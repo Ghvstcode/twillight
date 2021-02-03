@@ -8,7 +8,8 @@ import (
 
 
 func main() {
-	a := twillight.NewAuth("ACd4859955d9ff9fb86b0a6daabd2bd699", "f7c9a17f472979d2841c0d7a5e7495c6")
+	a := twillight.NewAuth("ACxxxxxxx", "f7xxxxxxxxx")
+
 
 	l := a.NewLookupClient()
 
